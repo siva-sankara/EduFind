@@ -43,7 +43,7 @@ const categories = [
   },
 ];
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       {/* Search Bar */}
@@ -66,7 +66,7 @@ const HomeScreen = () => {
           <Text style={styles.progressTextBold}>
             Complete your profile to get discovered and build your brand!
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=> navigation.navigate("ProfileSetUp")}>
             <Text style={styles.finishText}>Finish setting up →</Text>
           </TouchableOpacity>
         </View>

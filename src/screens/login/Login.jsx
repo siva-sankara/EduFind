@@ -1,30 +1,49 @@
-import React from 'react';
+// src/screens/login/Login.js
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { Button, TextInput, Snackbar } from 'react-native-paper';
+import { TextInput, Snackbar } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../../redux/slices/authSlice';
 import allText from '../../utility/TextContent';
+import { LoginAPI } from '../../api/apiCalls';
 
 
 
 export default function LoginScreen({ navigation }) {
   const { control, handleSubmit, formState: { errors }, reset } = useForm();
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Submit handler
-  const onSubmit = data => {
-    if (data.email === "test@example.com" && data.password === "password123") {
-      Alert.alert("Login Success", "Welcome back!");
-    } else {
-      Alert.alert("Login Failed", "Invalid email or password.");
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    try {
+      const response = await LoginAPI(data);
+      if (response.status === 200) {
+        const { token, user } = response?.data;
+        dispatch(setCredentials({ token, user }));  // Store in Redux
+        Alert.alert("Login Success", "Welcome back!");
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrorMessage(error.response?.data?.message || 'Login failed. Please try again.');
+      setSnackbarVisible(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
-   <View style={{alignItems:"center" , marginBottom:20}}>
-    <Text style={styles.helloText}>{allText.normaltext.helloText}</Text>
-   <Text style={styles.welcomeText}>{allText.normaltext.welcome}</Text>
-   </View>
+      <View style={{ alignItems: "center", marginBottom: 20 }}>
+        <Text style={styles.helloText}>{allText.normaltext.helloText}</Text>
+        <Text style={styles.welcomeText}>{allText.normaltext.welcome}</Text>
+      </View>
       <Text style={styles.header}>{allText.screenNames.login}</Text>
+
       {/* Email Field */}
       <Controller
         control={control}
@@ -70,7 +89,7 @@ export default function LoginScreen({ navigation }) {
         rules={{
           required: 'Password is required',
           minLength: {
-            value: 6,
+            value: 5,
             message: 'Password must be at least 6 characters',
           },
         }}
@@ -79,24 +98,27 @@ export default function LoginScreen({ navigation }) {
 
       {/* Submit Button */}
       <TouchableOpacity
-        mode="contained"
         onPress={handleSubmit(onSubmit)}
         style={styles.button}
+        disabled={isLoading}
       >
-        <Text style={styles.btnText}>{allText.screenNames.login}</Text>
+        <Text style={styles.btnText}>
+          {isLoading ? 'Logging in...' : allText.screenNames.login}
+        </Text>
       </TouchableOpacity>
+      {/* Navigate to SignUp Screen */}
       <View style={styles.linkContainer}>
         <Text style={styles.linkText}>{allText.normaltext.dontHavAcc}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-          <Text style={[styles.linkText, styles.loginText]}>{" "}{allText.screenNames.signup}</Text>
+          <Text style={[styles.linkText, styles.loginText]}> {allText.screenNames.signup}</Text>
         </TouchableOpacity>
       </View>
       <Snackbar
-        visible={errors.email || errors.password}
-        onDismiss={() => reset()}
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
         duration={3000}
       >
-        <Text >{allText.normaltext.fixerror}</Text>
+        <Text>{errorMessage}</Text>
       </Snackbar>
     </View>
   );
@@ -115,34 +137,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 30,
   },
-  helloText:{
-    fontSize:30,
-     color:"black", 
-     fontWeight:900,
-     marginBottom:20
+  helloText: {
+    fontSize: 30,
+    color: "black",
+    fontWeight: '900',
+    marginBottom: 20,
   },
-
-  welcomeText:{
-    fontSize:20,
-    color:"gray",
-    alignItems:"center",
+  welcomeText: {
+    fontSize: 20,
+    color: "gray",
+    textAlign: 'center',
   },
   input: {
     marginBottom: 15,
-    fontSize: 18, color:"F0C244"
   },
   button: {
     marginTop: 20,
-    padding:10,
-    alignItems:"center",
+    padding: 10,
+    alignItems: "center",
     backgroundColor: '#F0C244',
-    borderRadius:20,
-    cursor:"pointer"
+    borderRadius: 20,
   },
-
-  btnText:{
-    fontSize:18,
-    fontWeight:400
+  btnText: {
+    fontSize: 18,
   },
   errorText: {
     color: 'red',
@@ -155,12 +172,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   linkText: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#000',
   },
   loginText: {
-    color: '#FF7E5F',  // Coral color for the Login link
+    color: '#FF7E5F',
     fontWeight: 'bold',
-    fontSize:16
   },
 });
