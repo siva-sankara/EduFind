@@ -1,25 +1,65 @@
 import React from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { Button, TextInput, Snackbar } from 'react-native-paper';
+import { TextInput, Snackbar } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import allText from '../../utility/TextContent';
+import { SignUpAPI } from '../../api/apiCalls';
 
 export default function SignupScreen({ navigation }) {
-  const { control, handleSubmit, formState: { errors }, reset } = useForm();
-
+  const { control, handleSubmit, formState: { errors }, reset, getValues } = useForm();
   // Submit handler
-  const onSubmit = data => {
-    if (data.email && data.password === data.confirmPassword) {
-      Alert.alert(allText.alertText.success,allText.alertText.accountCreated);
-    } else {
-      Alert.alert(allText.alertText.signupField,allText.alertText.checkinputs );
+  const onSubmit = async (data) => {
+    console.log('Signup Data:', data);
+
+    if (data.password !== data.confirmPassword) {
+      Alert.alert(allText.alertText.signupField, allText.alertText.checkinputs);
+      return;
+    }
+
+    try {
+      const response = await SignUpAPI(data);
+      console.log('Signup Response:', response);
+
+      if (response.status === 201) {
+        Alert.alert(allText.alertText.success, allText.alertText.accountCreated);
+        reset();
+        navigation.navigate('Login');
+      }
+    } catch (error) {
+      console.error('Signup Error:', error);
+      Alert.alert(allText.alertText.error, allText.alertText.signupFailed);
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{allText.screenNames.signup}</Text>
-      
+
+      {/* Name Field */}
+      <Controller
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            label={allText.inputFields.username}
+            mode="outlined"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            error={!!errors.name}
+            style={styles.input}
+          />
+        )}
+        name="name"
+        rules={{
+          required: allText.requiredFields.nameRequired,
+          minLength: {
+            value: 3,
+            message: allText.errorText.nameTooShort,
+          },
+        }}
+      />
+      {errors.name && <Text style={styles.errorText}>{errors.name.message}</Text>}
+
       {/* Email Field */}
       <Controller
         control={control}
@@ -45,7 +85,7 @@ export default function SignupScreen({ navigation }) {
         }}
       />
       {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
-      
+
       {/* Password Field */}
       <Controller
         control={control}
@@ -63,10 +103,10 @@ export default function SignupScreen({ navigation }) {
         )}
         name="password"
         rules={{
-          required: allText.requiredFields.passwordrequired ,
+          required: allText.requiredFields.passwordrequired,
           minLength: {
             value: 6,
-            message:allText.errorText.passworderror,
+            message: allText.errorText.passworderror,
           },
         }}
       />
@@ -90,7 +130,7 @@ export default function SignupScreen({ navigation }) {
         name="confirmPassword"
         rules={{
           required: allText.requiredFields.confirmpassrequired,
-          validate: value => value === control.getValues('password') || allText.errorText.passwordNotMatch,
+          validate: value => value === getValues('password') || allText.errorText.passwordNotMatch,
         }}
       />
       {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>}
@@ -100,8 +140,9 @@ export default function SignupScreen({ navigation }) {
         mode="contained"
         onPress={handleSubmit(onSubmit)}
         style={styles.button}
+        // disabled={isLoading}
       >
-       <Text style={styles.btnText}>{allText.screenNames.signup}</Text>
+        <Text style={styles.btnText}>{allText.screenNames.signup}</Text>
       </TouchableOpacity>
 
       {/* Snackbar for Feedback */}
@@ -110,7 +151,7 @@ export default function SignupScreen({ navigation }) {
         onDismiss={() => reset()}
         duration={3000}
       >
-       {allText.normaltext.fixerror}
+        {allText.normaltext.fixerror}
       </Snackbar>
 
       {/* Navigate to Login Screen */}
@@ -139,18 +180,18 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 15,
-    fontSize:18
+    fontSize: 18
   },
   button: {
     marginTop: 20,
-    padding:10,
-    alignItems:"center",
+    padding: 10,
+    alignItems: "center",
     backgroundColor: '#F0C244',
-    borderRadius:20,
+    borderRadius: 20,
   },
-  btnText:{
-    fontSize:18,
-    fontWeight:400
+  btnText: {
+    fontSize: 18,
+    fontWeight: '400'
   },
   errorText: {
     color: 'red',
@@ -167,7 +208,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   loginText: {
-    color: '#FF7E5F',  // Coral color for the Login link
+    color: '#FF7E5F',  
     fontWeight: 'bold',
   },
 });

@@ -106,3 +106,10 @@ npm install @react-navigation/native
 npm install @react-navigation/bottom-tabs
 npm install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-vector-icons
 npm install react-native-vector-icons react-native-responsive-screen
+npm i react-native-image-picker
+npm i react-native-country-picker-modal
+npm i @react-native-community/datetimepicker
+npm install @reduxjs/toolkit
+npm install react-redux
+npm install @react-native-async-storage/async-storage
+npm install jwt-decode
