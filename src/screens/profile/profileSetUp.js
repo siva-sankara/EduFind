@@ -18,7 +18,7 @@ const ProfileSetup = ({ navigation, route }) => {
         socialMediaLinks: false,
     });
     const [expertise, setExpertise] = useState('');
-    const [profileImage, setProfileImage] = useState(null);
+    const [profileImage, setProfileImage] = useState(user?.media?.profilePicture?.imageUrl || null);
     const [user, setUser] = useState();
     const toggleSection = (section) => {
         setExpandedSections((prev) => ({
@@ -44,6 +44,9 @@ const ProfileSetup = ({ navigation, route }) => {
             fetchUserDetails();
         }, [userId])
     );
+     console.log('====================================');
+      console.log(user?.user );
+      console.log('====================================');
     return (
         <ScrollView style={{ flex: 1, backgroundColor: '#121212', padding: 20 }}>
             {/* Header Section */}
@@ -57,8 +60,8 @@ const ProfileSetup = ({ navigation, route }) => {
             </View>
             {/* Profile Image */}
             <TouchableOpacity onPress={() => Alert.alert('Add Photo')} style={{ alignSelf: 'center', marginBottom: 20 }}>
-                {profileImage ? (
-                    <Image source={{ uri: profileImage }} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                {(profileImage || user?.media?.profilePicture?.imageUrl )? (
+                    <Image source={{ uri:  `/http://10.0.2.2:8080/${user?.media?.profilePicture?.imageUrl}` }} style={{ width: 100, height: 100, borderRadius: 50 }} />
                 ) : (
                     <Icon name="account-circle" size={100} color="#aaa" />
                 )}
@@ -99,7 +102,7 @@ const ProfileSetup = ({ navigation, route }) => {
                     </TouchableOpacity>
                     {
                         expandedSections[section.key] && section.key === 'basicInfo' && (
-                            <BasicInfo user={user} userId={userId} />
+                            <BasicInfo user={user?.user} userId={userId} />
                         )
                     }
                     {expandedSections[section.key] && section.key === 'myExpertise' && (
@@ -121,7 +124,7 @@ const ProfileSetup = ({ navigation, route }) => {
                     )}
                     {
                         expandedSections[section.key] && section.key === 'socialMediaLinks' && (
-                            <SocialMediaLinks user={user} userId={userId} />
+                            <SocialMediaLinks user={user?.user} userId={userId} />
                         )
                     }
                 </View>

@@ -5,7 +5,8 @@ import endPoints from './endpoints';
 
 // Base URL Configuration
 const api = axios.create({
-  baseURL: 'http://10.0.2.2:8080',  // Change this to your API base URL
+  baseURL: 'http://10.0.2.2:8080', 
+  // baseURL: 'http://lochalhost:8080', // Change this to your API base URL
   headers: {
     'Content-Type': 'application/json',
   },
@@ -113,6 +114,48 @@ export const UpdateSocialMediaDetails = async (userId , data) => {
   } catch (error) {
     console.log("went something wrong")
     throw error;
+  }
+};
+
+
+//media
+export const uploadProfilePicture = async (userId, formData) => {
+  try {
+    const response = await axios.post(`http://10.0.2.2:8080/user/media/upload-profile-picture/${userId}`, formData , {headers: {
+      'Content-Type': 'multipart/form-data',
+    }});
+    console.log(response,"------")
+    return response.data;
+  } catch (error) {
+    console.error('Failed to upload profile picture:', error);
+    return null;
+  }
+};
+export const addUserVideo = async (userId, videoUrl, title, description) => {
+  try {
+    const response = await axios.post(endPoints.postVideo, {
+      userId,
+      videoUrl,
+      title,
+      description,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to add video:', error);
+    return null;
+  }
+};
+export const addPostedImage = async (userId, imageUrl, caption) => {
+  try {
+    const response = await axios.post(endPoints.postImage, {
+      userId,
+      imageUrl,
+      caption,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to add posted image:', error);
+    return null;
   }
 };
 

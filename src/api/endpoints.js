@@ -5,6 +5,9 @@ const endPoints ={
      updateSocailmediaLinks:"/user/upadte/socialmedia",
      updateProfile :"/update",
      UserDetails:"/user",
+     postProfilePicture :"/user/media/upload-profile-picture",
+     postVideo:"/user/media/video",
+     postImage:"/user/media/image",
 }
 
 export default endPoints;
