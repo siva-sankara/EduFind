@@ -13,3 +13,17 @@ export const getUserIdFromToken = (token) => {
     return null;
   }
 };
+
+export const getUserRoleFromToken = (token) => {
+  try {
+    // Decode the token to get the payload
+    if (token !== null || undefined || "") {
+      const decoded = jwtDecode(token);
+      // Return the user ID
+      return decoded?.role;
+    }
+  } catch (error) {
+    console.error('Invalid token:', error);
+    return null;
+  }
+};
