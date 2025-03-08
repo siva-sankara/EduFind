@@ -20,6 +20,8 @@ import CareerGauidanceScreen from './src/screens/otherScreens/userScreens/Career
 import InterviewPreparationScreen from './src/screens/otherScreens/userScreens/InterviewPreparationScreen.jsx';
 import MentalWellBeing from './src/screens/otherScreens/userScreens/MentalWellBeing.jsx';
 import RegisterAsTeacher from './src/screens/otherScreens/userScreens/RegisterAsTeacher.jsx';
+import QuestionsScreen from './src/screens/otherScreens/questions/QuestionsScreen.jsx';
+import EachQuestionScreen from './src/screens/otherScreens/questions/EachQuestion.jsx';
 
 
 const Stack = createStackNavigator();
@@ -45,6 +47,8 @@ const AppStack = () => (
     <Stack.Screen name="Career-Guidance" component={CareerGauidanceScreen} options={{ headerShown: true }} />
     <Stack.Screen name="Interview-preparation" component={InterviewPreparationScreen} options={{ headerShown: true }} />
     <Stack.Screen name="Mental-well-being" component={MentalWellBeing} options={{ headerShown: true }} />
+    <Stack.Screen name="All-Questions" component={QuestionsScreen} options={{ headerShown: true }} />
+    <Stack.Screen name="Question" component={EachQuestionScreen} options={{ headerShown: true }} />
   </Stack.Navigator>
 );
 

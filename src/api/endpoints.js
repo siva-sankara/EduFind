@@ -8,6 +8,13 @@ const endPoints ={
      postProfilePicture :"/user/media/upload-profile-picture",
      postVideo:"/user/media/video",
      postImage:"/user/media/image",
+     uploadAUserQuery:"/questions/post-a-question",
+     getAllQuestions:"/questions/get-all-question",
+     getCareerDetials:"user/getAllGuidances",
+     postAnswerToQuestion:"/answer/post",
+     upVoteAQuestion : "/questions/upvote",
+     downVoteAQuestion : "/questions/downvote",
+
 }
 
 export default endPoints;

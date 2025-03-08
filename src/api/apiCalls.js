@@ -117,7 +117,68 @@ export const UpdateSocialMediaDetails = async (userId , data) => {
   }
 };
 
+//upload a user query
+export const uploadAUserQuery=  async(queryData)=>{
+try {
+const response = await api.post( endPoints.uploadAUserQuery, queryData);
+  return response;
+} catch (error) {
+  console.error('Failed to upload user query:', error);
+  return null;
+}
+}
 
+//get all questions
+export const getAllQuestions=  async()=>{
+  try {
+  const response = await api.get( endPoints.getAllQuestions);
+    return response;
+  } catch (error) {
+    console.error('Failed to upload user query:', error);
+    return null;
+  }
+  }
+
+//get Career step Detsilas 
+export const getCareerStepDetails = async ()=>{
+  try {
+    const responce = await api.get(endPoints.getCareerDetials)
+    return responce;
+  } catch (error) {
+    return error?.message;
+  }
+}
+
+
+//post answer  to a question
+export const postAnswerToAQuestion =async(questionId ,newAnswerObj )=>{
+  try {
+    const response = await api.patch(`${endPoints.postAnswerToQuestion}/${questionId}`, newAnswerObj );
+    return response;
+  } catch (error) {
+    return error.message;
+  }
+}
+
+//upvote a question
+export const upVoteAQuestion = async(questionId, payload)=>{
+  try {
+    const response = await api.post(`${endPoints.upVoteAQuestion}/${questionId}`, payload);
+    return response;
+  } catch (error) {
+    return error?.message;
+  }
+}
+
+//upvote a question
+export const downVoteAQuestion = async(questionId, payload)=>{
+  try {
+    const response = await api.post(`${endPoints.downVoteAQuestion}/${questionId}`, payload);
+    return response;
+  } catch (error) {
+    return error?.message;
+  }
+}
 //media
 export const uploadProfilePicture = async (userId, formData) => {
   try {
@@ -131,6 +192,8 @@ export const uploadProfilePicture = async (userId, formData) => {
     return null;
   }
 };
+
+
 export const addUserVideo = async (userId, videoUrl, title, description) => {
   try {
     const response = await axios.post(endPoints.postVideo, {
@@ -145,6 +208,8 @@ export const addUserVideo = async (userId, videoUrl, title, description) => {
     return null;
   }
 };
+
+
 export const addPostedImage = async (userId, imageUrl, caption) => {
   try {
     const response = await axios.post(endPoints.postImage, {

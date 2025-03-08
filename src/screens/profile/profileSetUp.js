@@ -44,9 +44,7 @@ const ProfileSetup = ({ navigation, route }) => {
             fetchUserDetails();
         }, [userId])
     );
-     console.log('====================================');
-      console.log(user?.user );
-      console.log('====================================');
+
     return (
         <ScrollView style={{ flex: 1, backgroundColor: '#121212', padding: 20 }}>
             {/* Header Section */}

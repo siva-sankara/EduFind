@@ -142,7 +142,7 @@ const UserHome = ({ navigation, userId , userRole}) => {
                 scrollEnabled={false} // Disable FlatList scroll if inside ScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={[styles.categoryCard, { backgroundColor: item.bgColor }]} onPress={() => navigation.navigate(item?.pageRoute)}>
+                    <TouchableOpacity style={[styles.categoryCard, { backgroundColor: item.bgColor }]} onPress={() => navigation.navigate(item?.pageRoute , {navigation : navigation})}>
                         <Text style={styles.categoryTitle}>{item.title}</Text>
                         <Text style={styles.categorySubtitle}>{item.subtitle}</Text>
                     </TouchableOpacity>

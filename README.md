@@ -113,3 +113,5 @@ npm install @reduxjs/toolkit
 npm install react-redux
 npm install @react-native-async-storage/async-storage
 npm install jwt-decode
+npm install react-native-gesture-handler react-native-reanimated react-native-swiper-flatlist
+npm install @react-navigation/native nativewind @react-navigation/stack
